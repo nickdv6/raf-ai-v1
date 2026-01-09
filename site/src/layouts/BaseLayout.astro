@@ -1,0 +1,39 @@
+---
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="/styles/global.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <div style="font-size:18px;font-weight:700;">RAF AI Intelligence v1</div>
+            <div class="small">Probabilities & edges are informational only; no guarantees.</div>
+          </div>
+          <nav style="display:flex;gap:12px;">
+            <a href="/">Home</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="small" style="margin-top:28px; padding-bottom:28px;">
+        <hr />
+        <div>
+          Disclaimer: This site provides analytical estimates for entertainment and informational purposes.
+          If you choose to wager, do so responsibly.
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
