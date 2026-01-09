@@ -1,7 +1,8 @@
 import { defineConfig } from "astro/config";
 
 export default defineConfig({
-  site: "https://YOUR_GITHUB_USERNAME.github.io",
-  base: "/YOUR_REPO_NAME",
+  site: "https://nickdv6.github.io",
+  base: "/raf-ai-v1",
   output: "static"
 });
+
