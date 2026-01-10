@@ -1,16 +1,18 @@
 ---
 const { title = "RAF AI Intelligence v1" } = Astro.props;
-const base = import.meta.env.BASE_URL;
+
+// BASE_URL is "/" locally and "/raf-ai-v1/" on GitHub Pages
+const BASE = import.meta.env.BASE_URL;
 ---
-<link rel="stylesheet" href={`${BASE}styles/global.css`} />
-<a href={BASE}>Home</a>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <link rel="stylesheet" href={`${base}styles/global.css`} />
+
+    <!-- Base-aware stylesheet (important for GitHub Pages project sites) -->
+    <link rel="stylesheet" href={`${BASE}styles/global.css`} />
   </head>
   <body>
     <div class="container">
@@ -18,12 +20,11 @@ const base = import.meta.env.BASE_URL;
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
           <div>
             <div style="font-size:18px;font-weight:700;">RAF AI Intelligence v1</div>
-            <div class="small">
-              Probabilities & edges are informational only; no guarantees.
-            </div>
+            <div class="small">Probabilities & edges are informational only; no guarantees.</div>
           </div>
           <nav style="display:flex;gap:12px;">
-            <a href={base}>Home</a>
+            <!-- Base-aware Home link -->
+            <a href={BASE}>Home</a>
           </nav>
         </div>
       </header>
@@ -35,8 +36,8 @@ const base = import.meta.env.BASE_URL;
       <footer class="small" style="margin-top:28px; padding-bottom:28px;">
         <hr />
         <div>
-          Disclaimer: This site provides analytical estimates for entertainment
-          and informational purposes. If you choose to wager, do so responsibly.
+          Disclaimer: This site provides analytical estimates for entertainment and informational purposes.
+          If you choose to wager, do so responsibly.
         </div>
       </footer>
     </div>

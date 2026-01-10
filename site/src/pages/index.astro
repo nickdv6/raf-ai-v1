@@ -4,14 +4,46 @@ import { loadEvents, latestEvent } from "../lib/load";
 
 const payload = loadEvents();
 const latest = latestEvent();
+
+// BASE_URL is "/" locally and "/raf-ai-v1/" on GitHub Pages
 const BASE = import.meta.env.BASE_URL;
 ---
-
 <BaseLayout title="RAF AI Intelligence v1">
-  ...
-  <a href={`${BASE}events/${latest.slug}/`}>View card →</a>
-  ...
-  {payload.events.map((e) => (
-    <a href={`${BASE}events/${e.slug}/`}>{e.event_name}</a>
-  ))}
+  <section class="card">
+    <h1 style="margin:0 0 8px 0;">Latest Event</h1>
+    {latest ? (
+      <>
+        <div style="font-size:16px;font-weight:700;">{latest.event_name}</div>
+        <div class="small">
+          {latest.event_date_utc} {latest.location ? `• ${latest.location}` : ""}
+        </div>
+        <div style="margin-top:10px;">
+          <!-- IMPORTANT: no leading slash; BASE already ends with "/" -->
+          <a href={`${BASE}events/${latest.slug}/`}>View card →</a>
+        </div>
+      </>
+    ) : (
+      <div>No events found. Populate CSVs and run the pipeline.</div>
+    )}
+  </section>
+
+  <section class="card">
+    <h2 style="margin:0 0 10px 0;">Event Archive</h2>
+    <ul style="margin:0; padding-left: 18px;">
+      {payload.events.map((e) => (
+        <li>
+          <a href={`${BASE}events/${e.slug}/`}>{e.event_name}</a>
+          <span class="small"> — {e.event_date_utc}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2 style="margin:0 0 10px 0;">How this works (v1)</h2>
+    <div class="small">
+      v1 uses an Elo-style rating baseline derived from recorded outcomes plus lightweight adjustments.
+      “Edge” indicates model probability minus implied probability from the latest listed odds (if provided).
+    </div>
+  </section>
 </BaseLayout>
