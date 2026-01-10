@@ -1,48 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-const events = [
-  {
-    name: "RAF 1: Launch Card",
-    slug: "raf-2026-01-25",
-    date: "2026-01-25T01:00:00Z",
-  },
-];
-const base = import.meta.env.BASE_URL;
+import { loadEvents, latestEvent } from "../lib/load";
+
+const payload = loadEvents();
+const latest = latestEvent();
+const BASE = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="RAF AI Intelligence v1">
-  <section class="card">
-    <h2>Latest Event</h2>
-    <h3>{events[0].name}</h3>
-    <div class="small">{events[0].date} • New York</div>
-
-    <p>
-      <a href={`${base}events/${events[0].slug}/`}>
-        View card →
-      </a>
-    </p>
-  </section>
-
-  <section class="card">
-    <h2>Event Archive</h2>
-    <ul>
-      {events.map((e) => (
-        <li>
-          <a href={`${base}events/${e.slug}/`}>
-            {e.name}
-          </a>{" "}
-          — {e.date}
-        </li>
-      ))}
-    </ul>
-  </section>
-
-  <section class="card">
-    <h2>How this works (v1)</h2>
-    <p>
-      v1 uses an Elo-style rating baseline derived from recorded outcomes
-      plus lightweight adjustments. “Edge” indicates model probability
-      minus implied probability from the latest listed odds (if provided).
-    </p>
-  </section>
+  ...
+  <a href={`${BASE}events/${latest.slug}/`}>View card →</a>
+  ...
+  {payload.events.map((e) => (
+    <a href={`${BASE}events/${e.slug}/`}>{e.event_name}</a>
+  ))}
 </BaseLayout>
