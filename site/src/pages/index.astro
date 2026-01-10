@@ -13,7 +13,7 @@ const latest = latestEvent();
         <div style="font-size:16px;font-weight:700;">{latest.event_name}</div>
         <div class="small">{latest.event_date_utc} {latest.location ? `• ${latest.location}` : ""}</div>
         <div style="margin-top:10px;">
-          <a href={`/events/${latest.slug}/`}>View card →</a>
+          <a href={new URL(`events/${latest.slug}/`, Astro.site)}>View card →</a>
         </div>
       </>
     ) : (
@@ -26,7 +26,7 @@ const latest = latestEvent();
     <ul style="margin:0; padding-left: 18px;">
       {payload.events.map((e) => (
         <li>
-          <a href={`/events/${e.slug}/`}>{e.event_name}</a>
+          <a href={new URL(`events/${e.slug}/`, Astro.site)}>{e.event_name}</a>
           <span class="small"> — {e.event_date_utc}</span>
         </li>
       ))}
