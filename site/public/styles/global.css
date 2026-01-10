@@ -1,68 +1,267 @@
-:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-body { margin: 0; background: #0b0f14; color: #e6edf3; }
-a { color: #8ab4f8; text-decoration: none; }
-a:hover { text-decoration: underline; }
-.container { max-width: 1040px; margin: 0 auto; padding: 24px; }
-.card { background: #111826; border: 1px solid #223047; border-radius: 12px; padding: 16px; margin: 12px 0; }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid #2a3a55; font-size: 12px; }
-.table { width: 100%; border-collapse: collapse; }
-.table th, .table td { padding: 10px; border-bottom: 1px solid #223047; vertical-align: top; }
-.small { opacity: 0.85; font-size: 13px; }
-hr { border: 0; border-top: 1px solid #223047; margin: 18px 0; }
-.table thead th {
-  position: sticky;
-  top: 0;
-  background: #111826;
-  z-index: 1;
+/* =========================================================
+   RAF AI — Global Styles (Dark RAF Theme)
+   Single source of truth for base layout + components.
+   ========================================================= */
+
+:root {
+  /* Typography */
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+  /* RAF Dark Palette */
+  --bg: #0b0f14;
+  --surface: #111826;
+  --surface-alt: #0f172a;
+  --border: #223047;
+
+  --text: #e6edf3;
+  --muted: #9aa4b2;
+
+  --link: #7aa2ff;
+  --link-hover: #9bb8ff;
+
+  /* Optional “signal” accent */
+  --accent: #7aa2ff;
+  --accent-2: #2dd4bf;
 }
 
-.table tbody tr:hover {
-  background: rgba(138, 180, 248, 0.06);
+* {
+  box-sizing: border-box;
 }
 
-.badge {
-  background: rgba(138, 180, 248, 0.08);
+html, body {
+  height: 100%;
 }
+
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
-  background: #0f1115;
-  color: #e6e6e6;
   margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
 }
 
+/* Links */
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+/* Layout */
 .container {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
   padding: 24px;
 }
 
+/* Core UI */
 .card {
-  background: #171a21;
-  border: 1px solid #2a2f3a;
-  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   padding: 16px;
+  margin: 12px 0;
 }
 
-a {
-  color: #7aa2ff;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #2a3a55;
+  font-size: 12px;
+  background: rgba(122, 162, 255, 0.10);
+  color: var(--text);
 }
 
 .small {
   font-size: 13px;
-  color: #9aa4b2;
+  color: var(--muted);
+  opacity: 1; /* avoid global washout */
 }
 
 hr {
-  border: none;
-  border-top: 1px solid #2a2f3a;
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 18px 0;
 }
-body { background: #ffdddd !important; }
 
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
+.table th,
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
 
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 1;
+}
+
+.table tbody tr:hover {
+  background: rgba(122, 162, 255, 0.08);
+}
+
+/* Buttons (basic, consistent with RAF palette) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid rgba(122, 162, 255, 0.28);
+  color: var(--text);
+  background: rgba(122, 162, 255, 0.10);
+}
+
+.btn:hover {
+  background: rgba(122, 162, 255, 0.16);
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: rgba(122, 162, 255, 0.18);
+  border-color: rgba(122, 162, 255, 0.38);
+}
+
+.btn--primary:hover {
+  background: rgba(122, 162, 255, 0.24);
+}
+
+.btn--secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+
+/* =========================================================
+   Top Value Spots — RAF Theme (scoped; does not touch .card)
+   ========================================================= */
+
+.tv-section {
+  margin: 1.25rem 0 2rem;
+}
+
+.tv-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
+/* Subtle accent border for “premium analytics” feel */
+.tv-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(122, 162, 255, 0.65),
+    rgba(45, 212, 191, 0.40)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card__header {
+  margin-bottom: 1rem;
+}
+
+.card__title {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.card__subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+  opacity: 1;
+}
+
+.tv-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.tv-metric {
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+}
+
+.tv-metric__label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.tv-metric__value {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.tv-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.tv-item {
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+}
+
+.tv-item__name {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.tv-item__meta {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+  opacity: 1;
+}
+
+.tv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 720px) {
+  .tv-metrics {
+    grid-template-columns: 1fr;
+  }
+}
