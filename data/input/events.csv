@@ -1,2 +1,2 @@
-event_id	slug	event_name	event_date_utc	location	
-E001	raf-2026-01-25	RAF 1: Launch Card	2026-01-25T01:00:00Z	New York	 NY
+event_id,event_name,event_date_utc,slug
+raf-001,RAF Showcase 1,2026-01-15T01:00:00Z,raf-showcase-1
