@@ -1,0 +1,7 @@
+name: Build and Deploy (GitHub Pages)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
