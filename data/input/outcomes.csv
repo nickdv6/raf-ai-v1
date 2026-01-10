@@ -1,3 +1,2 @@
 bout_id,winner,method,ended_round,ended_time,recorded_timestamp_utc
-B001,A,Decision,,,2026-01-26T03:00:00Z
-B002,B,Tech Fall,,,2026-01-26T03:00:00Z
+B001,A,Decision,,,"2026-01-26T03:00:00Z"

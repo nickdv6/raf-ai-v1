@@ -1,3 +1,2 @@
 bout_id,book,odds_a_american,odds_b_american,odds_timestamp_utc
-B001,ExampleBook,-140,120,2026-01-24T18:00:00Z
-B002,ExampleBook,105,-125,2026-01-24T18:00:00Z
+B001,ExampleBook,-140,+120,2026-01-24T18:00:00Z
