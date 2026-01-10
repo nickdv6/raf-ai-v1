@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "astro": "^4.16.19",
-    "@astrojs/github-pages": "^8.0.0"
+    "@astrojs/github-pages": "^5.2.0"
   }
 }
 
