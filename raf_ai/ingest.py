@@ -46,11 +46,18 @@ def ingest_all(con: sqlite3.Connection, input_dir: Path) -> dict[str, int]:
         if missing:
             raise ValueError(f"{name}.csv missing columns: {sorted(missing)}")
 
-    # Simple v1 approach: replace tables on each run
-    events.to_sql("events", con, if_exists="replace", index=False)
-    bouts.to_sql("bouts", con, if_exists="replace", index=False)
-    odds.to_sql("odds", con, if_exists="replace", index=False)
-    outcomes.to_sql("outcomes", con, if_exists="replace", index=False)
+    # Preserve schema + foreign keys: clear tables then insert
+    con.execute("DELETE FROM odds;")
+    con.execute("DELETE FROM outcomes;")
+    con.execute("DELETE FROM predictions;")  # clear old predictions since they depend on bouts
+    con.execute("DELETE FROM bouts;")
+    con.execute("DELETE FROM events;")
+    con.commit()
+
+    events.to_sql("events", con, if_exists="append", index=False)
+    bouts.to_sql("bouts", con, if_exists="append", index=False)
+    odds.to_sql("odds", con, if_exists="append", index=False)
+    outcomes.to_sql("outcomes", con, if_exists="append", index=False)
 
     con.commit()
     return {
