@@ -21,6 +21,21 @@ function edgeFmt(x) {
   const sign = v >= 0 ? "+" : "";
   return `${sign}${(v * 100).toFixed(1)}%`;
 }
+
+function oddsFmt(o) {
+  if (o === null || o === undefined) return "—";
+  const v = Number(o);
+  const sign = v > 0 ? "+" : "";
+  return `${sign}${v}`;
+}
+
+function winnerText(outcome, bout) {
+  if (!outcome) return "—";
+  const w = String(outcome.winner).toUpperCase();
+  const name = w === "A" ? bout.fighter_a : w === "B" ? bout.fighter_b : outcome.winner;
+  const method = outcome.method ? ` • ${outcome.method}` : "";
+  return `${name}${method}`;
+}
 ---
 <BaseLayout title={event ? event.event_name : "Event"}>
   {!event ? (
@@ -29,81 +44,113 @@ function edgeFmt(x) {
     <>
       <section class="card">
         <h1 style="margin:0 0 6px 0;">{event.event_name}</h1>
-        <div class="small">{event.event_date_utc} {event.location ? `• ${event.location}` : ""}</div>
-        <div class="small" style="margin-top:8px;">
-          Affiliate links can be placed here later (v1 keeps this minimal).
+        <div class="small">
+          {event.event_date_utc} {event.location ? `• ${event.location}` : ""}
+        </div>
+        <div class="small" style="margin-top:10px;">
+          Probabilities and “edge” are informational only. Edge = model probability minus implied probability from the latest listed odds (if provided).
         </div>
       </section>
 
       <section class="card">
-        <h2 style="margin:0 0 10px 0;">Card</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Bout</th>
-              <th>Model</th>
-              <th>Odds</th>
-              <th>Edge</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody>
-            {event.bouts.map((b) => (
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; gap:12px;">
+          <div>
+            <h2 style="margin:0 0 6px 0;">Predictions</h2>
+            <div class="small">Sorted by bout order.</div>
+          </div>
+        </div>
+
+        <div style="overflow:auto; margin-top:12px;">
+          <table class="table">
+            <thead>
               <tr>
-                <td>{b.bout_order}</td>
-                <td>
-                  <div style="font-weight:700;">
-                    {b.fighter_a} vs {b.fighter_b}
-                  </div>
-                  <div class="small">
-                    {b.weight_class_lbs ? `${b.weight_class_lbs} lbs` : "—"}
-                  </div>
-                </td>
-                <td>
-                  {b.prediction ? (
-                    <>
-                      <div class="badge">{b.prediction.confidence} confidence</div>
-                      <div class="small" style="margin-top:6px;">
-                        A: {pct(b.prediction.p_a)} • B: {pct(b.prediction.p_b)}
-                      </div>
-                    </>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td class="small">
-                  {b.odds ? (
-                    <>
-                      <div>{b.odds.book}</div>
-                      <div>A: {b.odds.odds_a_american} • B: {b.odds.odds_b_american}</div>
-                      <div class="small">{b.odds.odds_timestamp_utc}</div>
-                    </>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td class="small">
-                  {b.prediction ? (
-                    <>
-                      <div>A: {edgeFmt(b.prediction.edge_a)}</div>
-                      <div>B: {edgeFmt(b.prediction.edge_b)}</div>
-                    </>
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td class="small">
-                  {b.outcome ? (
-                    <div>Winner: {b.outcome.winner} {b.outcome.method ? `(${b.outcome.method})` : ""}</div>
-                  ) : (
-                    "—"
-                  )}
-                </td>
+                <th style="min-width:48px;">#</th>
+                <th style="min-width:260px;">Bout</th>
+                <th style="min-width:200px;">Model</th>
+                <th style="min-width:220px;">Odds</th>
+                <th style="min-width:180px;">Edge</th>
+                <th style="min-width:220px;">Result</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {event.bouts.map((b) => {
+                const p = b.prediction;
+                const o = b.odds;
+                const out = b.outcome;
+
+                return (
+                  <tr>
+                    <td>{b.bout_order}</td>
+
+                    <td>
+                      <div style="font-weight:700;">
+                        {b.fighter_a} <span class="small" style="opacity:0.9;">vs</span> {b.fighter_b}
+                      </div>
+                      <div class="small">
+                        {b.weight_class_lbs ? `${b.weight_class_lbs} lbs` : "—"}
+                      </div>
+                    </td>
+
+                    <td>
+                      {p ? (
+                        <>
+                          <div class="badge">{p.confidence} confidence</div>
+                          <div class="small" style="margin-top:8px;">
+                            <div><b>A</b>: {pct(p.p_a)} &nbsp; <span class="small">({b.fighter_a})</span></div>
+                            <div><b>B</b>: {pct(p.p_b)} &nbsp; <span class="small">({b.fighter_b})</span></div>
+                          </div>
+                        </>
+                      ) : (
+                        <span class="small">No model output</span>
+                      )}
+                    </td>
+
+                    <td class="small">
+                      {o ? (
+                        <>
+                          <div style="font-weight:600;">{o.book}</div>
+                          <div style="margin-top:6px;">
+                            <div><b>A</b>: {oddsFmt(o.odds_a_american)}</div>
+                            <div><b>B</b>: {oddsFmt(o.odds_b_american)}</div>
+                          </div>
+                          <div class="small" style="margin-top:6px; opacity:0.8;">
+                            {o.odds_timestamp_utc}
+                          </div>
+                        </>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+
+                    <td class="small">
+                      {p ? (
+                        <>
+                          <div><b>A</b>: {edgeFmt(p.edge_a)}</div>
+                          <div><b>B</b>: {edgeFmt(p.edge_b)}</div>
+                        </>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+
+                    <td class="small">
+                      {winnerText(out, b)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3 style="margin:0 0 8px 0;">Next UI upgrades</h3>
+        <ul class="small" style="margin:0; padding-left:18px;">
+          <li>Sort view by largest edge</li>
+          <li>Highlight rows with High confidence and positive edge</li>
+          <li>Add “Top 3 value spots” summary card</li>
+        </ul>
       </section>
     </>
   )}

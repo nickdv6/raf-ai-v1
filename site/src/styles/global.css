@@ -9,3 +9,18 @@ a:hover { text-decoration: underline; }
 .table th, .table td { padding: 10px; border-bottom: 1px solid #223047; vertical-align: top; }
 .small { opacity: 0.85; font-size: 13px; }
 hr { border: 0; border-top: 1px solid #223047; margin: 18px 0; }
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: #111826;
+  z-index: 1;
+}
+
+.table tbody tr:hover {
+  background: rgba(138, 180, 248, 0.06);
+}
+
+.badge {
+  background: rgba(138, 180, 248, 0.08);
+}
+
