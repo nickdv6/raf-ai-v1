@@ -1,6 +1,13 @@
 ---
 const { title = "RAF AI Intelligence v1" } = Astro.props;
 const base = import.meta.env.BASE_URL;
+
+/**
+ * Cache-bust CSS in dev so style changes always apply
+ * without hard refresh. In production, keep stable
+ * unless manually bumped.
+ */
+const cssVersion = import.meta.env.DEV ? Date.now() : "1";
 ---
 
 <!doctype html>
@@ -10,14 +17,19 @@ const base = import.meta.env.BASE_URL;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
 
-    <!-- IMPORTANT: prefix styles with BASE_URL -->
-  <link rel="stylesheet" href={`${import.meta.env.BASE_URL}styles/global.css`} />
+    <!-- BASE_URL-safe stylesheet with cache busting -->
+    <link
+      rel="stylesheet"
+      href={`${base}styles/global.css?v=${cssVersion}`}
+    />
   </head>
 
   <body>
     <div class="container">
       <header class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+        <div
+          style="display:flex;justify-content:space-between;align-items:center;gap:12px;"
+        >
           <div>
             <div style="font-size:18px;font-weight:700;">
               RAF AI Intelligence v1
