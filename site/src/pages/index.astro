@@ -1,45 +1,48 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import { loadEvents, latestEvent } from "../lib/load";
-
-const payload = loadEvents();
-const latest = latestEvent();
+import Layout from "../layouts/Base.astro";
+const events = [
+  {
+    name: "RAF 1: Launch Card",
+    slug: "raf-2026-01-25",
+    date: "2026-01-25T01:00:00Z",
+  },
+];
+const base = import.meta.env.BASE_URL;
 ---
-<BaseLayout title="RAF AI Intelligence v1">
+
+<Layout title="RAF AI Intelligence v1">
   <section class="card">
-    <h1 style="margin:0 0 8px 0;">Latest Event</h1>
-    {latest ? (
-      <>
-        <div style="font-size:16px;font-weight:700;">{latest.event_name}</div>
-        <div class="small">
-          {latest.event_date_utc} {latest.location ? `• ${latest.location}` : ""}
-        </div>
-        <div style="margin-top:10px;">
-          <a href={`${Astro.base}/events/${latest.slug}/`}>View card →</a>
-        </div>
-      </>
-    ) : (
-      <div>No events found. Populate CSVs and run the pipeline.</div>
-    )}
+    <h2>Latest Event</h2>
+    <h3>{events[0].name}</h3>
+    <div class="small">{events[0].date} • New York</div>
+
+    <p>
+      <a href={`${base}events/${events[0].slug}/`}>
+        View card →
+      </a>
+    </p>
   </section>
 
   <section class="card">
-    <h2 style="margin:0 0 10px 0;">Event Archive</h2>
-    <ul style="margin:0; padding-left: 18px;">
-      {payload.events.map((e) => (
+    <h2>Event Archive</h2>
+    <ul>
+      {events.map((e) => (
         <li>
-          <a href={`${Astro.base}/events/${e.slug}/`}>{e.event_name}</a>
-          <span class="small"> — {e.event_date_utc}</span>
+          <a href={`${base}events/${e.slug}/`}>
+            {e.name}
+          </a>{" "}
+          — {e.date}
         </li>
       ))}
     </ul>
   </section>
 
   <section class="card">
-    <h2 style="margin:0 0 10px 0;">How this works (v1)</h2>
-    <div class="small">
-      v1 uses an Elo-style rating baseline derived from recorded outcomes plus lightweight adjustments.
-      “Edge” indicates model probability minus implied probability from the latest listed odds (if provided).
-    </div>
+    <h2>How this works (v1)</h2>
+    <p>
+      v1 uses an Elo-style rating baseline derived from recorded outcomes
+      plus lightweight adjustments. “Edge” indicates model probability
+      minus implied probability from the latest listed odds (if provided).
+    </p>
   </section>
-</BaseLayout>
+</Layout>
