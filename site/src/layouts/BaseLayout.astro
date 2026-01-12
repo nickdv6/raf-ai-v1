@@ -1,5 +1,5 @@
 ---
-const { title = "RAF AI Intelligence v1" } = Astro.props;
+const { title = "Signal Forge Sports" } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
 /**
@@ -8,6 +8,9 @@ const base = import.meta.env.BASE_URL;
  * unless manually bumped.
  */
 const cssVersion = import.meta.env.DEV ? Date.now() : "1";
+
+const brandName = "Signal Forge Sports";
+const tagline = "AI-driven signals for RAF and emerging sports markets.";
 ---
 
 <!doctype html>
@@ -15,33 +18,43 @@ const cssVersion = import.meta.env.DEV ? Date.now() : "1";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>{title}</title>
+    <meta name="description" content={tagline} />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content={brandName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={tagline} />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={tagline} />
 
     <!-- BASE_URL-safe stylesheet with cache busting -->
-    <link
-      rel="stylesheet"
-      href={`${base}styles/global.css?v=${cssVersion}`}
-    />
+    <link rel="stylesheet" href={`${base}styles/global.css?v=${cssVersion}`} />
   </head>
 
   <body>
     <div class="container">
       <header class="card">
-        <div
-          style="display:flex;justify-content:space-between;align-items:center;gap:12px;"
-        >
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
           <div>
             <div style="font-size:18px;font-weight:700;">
-              RAF AI Intelligence v1
+              {brandName}
             </div>
             <div class="small">
-              Probabilities & edges are informational only; no guarantees.
+              {tagline}
             </div>
           </div>
 
           <nav style="display:flex;gap:12px;">
             <!-- Home MUST include base -->
             <a href={base}>Home</a>
+            <a href={`${base}about/`}>About</a>
+            <a href={`${base}disclaimer/`}>Disclaimer</a>
           </nav>
         </div>
       </header>
@@ -53,8 +66,9 @@ const cssVersion = import.meta.env.DEV ? Date.now() : "1";
       <footer class="small" style="margin-top:28px;padding-bottom:28px;">
         <hr />
         <div>
-          Disclaimer: This site provides analytical estimates for informational
-          purposes only. If you choose to wager, do so responsibly.
+          Signal Forge Sports provides analytical information only and does not
+          offer betting advice, picks, or guarantees. If you choose to participate
+          in regulated wagering, do so responsibly and in accordance with your local laws.
         </div>
       </footer>
     </div>
