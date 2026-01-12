@@ -1,0 +1,108 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const title = "Pricing — Signal Forge Sports";
+
+const annualNote = "Annual plans include 2 months free.";
+---
+
+<BaseLayout title={title}>
+  <section class="card">
+    <h1 class="card__title">Pricing</h1>
+    <p class="small" style="max-width:72ch;">
+      Signal Forge Sports is built around disciplined, informational signals for RAF and emerging sports markets.
+      Plans are priced to reflect access, depth, and tooling — not promises of outcomes.
+    </p>
+
+    <div class="small" style="margin-top:10px;opacity:0.8;">
+      {annualNote}
+    </div>
+  </section>
+
+  <div style="display:grid;gap:16px;margin-top:16px;">
+    <!-- Free -->
+    <section class="card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div>
+          <h2 style="margin:0;">Free</h2>
+          <div class="small" style="margin-top:6px;opacity:0.8;">
+            Public access to Signal Forge Sports core event pages.
+          </div>
+        </div>
+        <div style="font-weight:800;">$0</div>
+      </div>
+
+      <ul class="small" style="margin-top:12px;">
+        <li>Event pages and bout breakdowns</li>
+        <li>Probabilities, confidence labels, and edges (rounded)</li>
+        <li>Card Highlight (best spot excluding low confidence)</li>
+        <li>No sorting or filtering tools</li>
+        <li>No affiliate CTAs</li>
+      </ul>
+    </section>
+
+    <!-- Basic -->
+    <section class="card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div>
+          <h2 style="margin:0;">Forge Basic</h2>
+          <div class="small" style="margin-top:6px;opacity:0.8;">
+            More depth and historical context — without advanced tooling.
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:800;">$19 / month</div>
+          <div class="small" style="opacity:0.8;">$190 / year</div>
+        </div>
+      </div>
+
+      <ul class="small" style="margin-top:12px;">
+        <li>Historical event archive</li>
+        <li>Closing-line comparison (model vs market)</li>
+        <li>Earlier event availability (when published)</li>
+        <li>No edge sorting/filtering (Pro only)</li>
+        <li>No affiliate CTAs (Pro only)</li>
+      </ul>
+
+      <div class="small" style="margin-top:10px;opacity:0.8;">
+        Annual includes 2 months free (10 months billed).
+      </div>
+    </section>
+
+    <!-- Pro -->
+    <section class="card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div>
+          <h2 style="margin:0;">Forge Pro</h2>
+          <div class="small" style="margin-top:6px;opacity:0.8;">
+            Full tooling, filters, and Pro-only features.
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:800;">$29 / month</div>
+          <div class="small" style="opacity:0.8;">$290 / year</div>
+        </div>
+      </div>
+
+      <ul class="small" style="margin-top:12px;">
+        <li>Edge sorting and filtering (Pro only)</li>
+        <li>Advanced market context indicators</li>
+        <li>Watchlists and alerts (email first)</li>
+        <li>Affiliate CTAs unlocked (view market links)</li>
+      </ul>
+
+      <div class="small" style="margin-top:10px;opacity:0.8;">
+        Annual includes 2 months free (10 months billed).
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:16px;">
+    <h2 style="margin-top:0;">Notes</h2>
+    <ul class="small">
+      <li>Signal Forge Sports is informational analytics only — not betting advice.</li>
+      <li>We avoid guarantees, picks, and ROI claims by design.</li>
+      <li>Market availability varies by state and operator.</li>
+    </ul>
+  </section>
+</BaseLayout>
