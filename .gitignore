@@ -1,4 +1,18 @@
 .DS_Store
 site/node_modules/
 site/package-lock.json
+# Local databases / runtime artifacts
+raf.sqlite
+raf.sqlite-shm
+raf.sqlite-wal
+
+# Python cache
+raf_ai/__pycache__/
+
+# Astro build artifacts
+site/dist/
+site/.astro/
+
+# Astro generated types (optional; generated automatically)
+site/src/env.d.ts
 
