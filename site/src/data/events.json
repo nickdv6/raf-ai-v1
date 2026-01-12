@@ -1,1 +1,62 @@
-{ "events": [] }
+{
+  "events": [
+    {
+      "event_id": "E001",
+      "slug": "raf-2026-01-25",
+      "event_name": "RAF 1: Launch Card",
+      "event_date_utc": "2026-01-25T01:00:00Z",
+      "location": "New York",
+      "bouts": [
+        {
+          "bout_id": "B001",
+          "bout_order": 1,
+          "weight_class_lbs": 74,
+          "fighter_a": "John Smith",
+          "fighter_b": "Alex Garcia",
+          "prediction": {
+            "p_a": 0.53,
+            "p_b": 0.47,
+            "confidence": "Low",
+            "edge_a": -0.04,
+            "edge_b": 0.01
+          },
+          "odds": {
+            "book": "ExampleBook",
+            "odds_a_american": -140,
+            "odds_b_american": 120,
+            "odds_timestamp_utc": "2026-01-24T18:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "E002",
+      "slug": "raleigh-amateur-fights-2026-01-25",
+      "event_name": "Raleigh Amateur Fights",
+      "event_date_utc": "2026-01-25T23:00:00Z",
+      "location": "Raleigh, NC",
+      "bouts": [
+        {
+          "bout_id": "R001",
+          "bout_order": 1,
+          "weight_class_lbs": 70,
+          "fighter_a": "Sample Fighter A",
+          "fighter_b": "Sample Fighter B",
+          "prediction": {
+            "p_a": 0.55,
+            "p_b": 0.45,
+            "confidence": "Medium",
+            "edge_a": 0.03,
+            "edge_b": -0.02
+          },
+          "odds": {
+            "book": "ExampleBook",
+            "odds_a_american": -110,
+            "odds_b_american": 100,
+            "odds_timestamp_utc": "2026-01-25T12:00:00Z"
+          }
+        }
+      ]
+    }
+  ]
+}
