@@ -5,7 +5,6 @@ import { affiliateConfig } from "../../config/affiliate";
 import { FEATURES } from "../../config/features.ts";
 import { ACTIVE_TIER } from "../../config/access.ts";
 
-
 export function getStaticPaths() {
   const events = siteData?.events ?? [];
   return events
@@ -17,6 +16,24 @@ const { slug } = Astro.params;
 
 const events = siteData?.events ?? [];
 const event = events.find((e) => e?.slug === slug) ?? null;
+
+// Compute "Last updated" timestamp from latest odds update across all bouts
+const lastUpdatedIso = (() => {
+  if (!event?.bouts?.length) return event?.event_date_utc ?? null;
+
+  const timestamps = event.bouts
+    .map((b) => b?.odds?.odds_timestamp_utc)
+    .filter(Boolean)
+    .map((t) => new Date(t))
+    .filter((d) => !Number.isNaN(d.getTime()));
+
+  if (timestamps.length === 0) {
+    return event?.event_date_utc ?? null;
+  }
+
+  const latest = new Date(Math.max(...timestamps.map((d) => d.getTime())));
+  return latest.toISOString();
+})();
 
 const fmtDateTime = (iso) => {
   if (!iso) return "";
@@ -53,6 +70,7 @@ const fmtAmericanOdds = (o) => {
 };
 
 const features = FEATURES[ACTIVE_TIER];
+
 const upgradeTitle =
   ACTIVE_TIER === "basic" ? "Unlock Forge Pro features" : "Upgrade for more tools";
 
@@ -60,8 +78,6 @@ const upgradeBody =
   ACTIVE_TIER === "basic"
     ? "Forge Pro unlocks edge sorting/filtering and Pro-only market tools."
     : "Forge Basic adds historical access. Forge Pro unlocks edge sorting/filtering and Pro-only tools.";
-
-
 
 // Branding
 const pageTitle = event?.event_name
@@ -145,7 +161,12 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
             </div>
           </div>
 
-          <a class="btn btn--sm" href={`${base}`}>Back</a>
+          <div style="display:flex;align-items:center;gap:8px;">
+            {lastUpdatedIso ? (
+              <span class="pill">Last updated {fmtDateTime(lastUpdatedIso)}</span>
+            ) : null}
+            <a class="btn btn--sm" href={`${base}`}>Back</a>
+          </div>
         </div>
 
         <div class="small" style="margin-top:10px;">
@@ -203,17 +224,19 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
             </div>
           </div>
         )}
-{features.showUpgradePrompt && (
-  <div class="card" style="margin-top:12px;padding:14px;">
-    <div style="font-weight:800;">{upgradeTitle}</div>
-    <div class="small" style="margin-top:6px;max-width:70ch;">
-      {upgradeBody}
-    </div>
-    <div style="margin-top:10px;">
-      <a class="btn btn--sm" href={`${base}pricing/`}>View plans</a>
-    </div>
-  </div>
-)}
+
+        {features.showUpgradePrompt && (
+          <div class="card" style="margin-top:12px;padding:14px;">
+            <div style="font-weight:800;">{upgradeTitle}</div>
+            <div class="small" style="margin-top:6px;max-width:70ch;">
+              {upgradeBody}
+            </div>
+            <div style="margin-top:10px;">
+              <a class="btn btn--sm" href={`${base}pricing/`}>View plans</a>
+            </div>
+          </div>
+        )}
+
         {features.showAffiliateCTA && affiliateConfig.enabled && affiliateConfig.url && (
           <div class="card" style="margin-top:12px;padding:14px;">
             <div class="small">
