@@ -6,6 +6,7 @@ from raf_ai.model import predict_and_store
 from raf_ai.export import export_site_json
 from raf_ai.notify import send_discord, build_summary_text
 
+
 def main() -> None:
     paths = Paths()
     con = connect(paths.db_path)
@@ -14,6 +15,15 @@ def main() -> None:
     counts = ingest_all(con, paths.data_input)
     n_preds = predict_and_store(con)
     export_site_json(con, paths.site_data_out)
+
+    # Tuning readiness (Trigger B): >= 5 events AND >= 10 total bouts
+    try:
+        ev_count = con.execute("SELECT COUNT(*) FROM events;").fetchone()[0] or 0
+        bout_count = con.execute("SELECT COUNT(*) FROM bouts;").fetchone()[0] or 0
+        tuning_ready = (ev_count >= 5) and (bout_count >= 10)
+        print(f"Tuning readiness: {'YES' if tuning_ready else 'NO'} (events={ev_count}, bouts={bout_count})")
+    except Exception as e:
+        print(f"Tuning readiness: UNKNOWN (error: {e})")
 
     # Discord optional
     wh = discord_webhook_url()
@@ -31,6 +41,7 @@ def main() -> None:
     print("Imported:", counts)
     print("Predictions generated:", n_preds)
     print("Site data:", paths.site_data_out)
+
 
 if __name__ == "__main__":
     main()
