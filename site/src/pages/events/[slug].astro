@@ -53,6 +53,14 @@ const fmtAmericanOdds = (o) => {
 };
 
 const features = FEATURES[ACTIVE_TIER];
+const upgradeTitle =
+  ACTIVE_TIER === "basic" ? "Unlock Forge Pro features" : "Upgrade for more tools";
+
+const upgradeBody =
+  ACTIVE_TIER === "basic"
+    ? "Forge Pro unlocks edge sorting/filtering and Pro-only market tools."
+    : "Forge Basic adds historical access. Forge Pro unlocks edge sorting/filtering and Pro-only tools.";
+
 
 
 // Branding
@@ -195,8 +203,18 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
             </div>
           </div>
         )}
-
-        {affiliateConfig.enabled && affiliateConfig.url && (
+{features.showUpgradePrompt && (
+  <div class="card" style="margin-top:12px;padding:14px;">
+    <div style="font-weight:800;">{upgradeTitle}</div>
+    <div class="small" style="margin-top:6px;max-width:70ch;">
+      {upgradeBody}
+    </div>
+    <div style="margin-top:10px;">
+      <a class="btn btn--sm" href={`${base}pricing/`}>View plans</a>
+    </div>
+  </div>
+)}
+        {features.showAffiliateCTA && affiliateConfig.enabled && affiliateConfig.url && (
           <div class="card" style="margin-top:12px;padding:14px;">
             <div class="small">
               <a href={affiliateConfig.url} target="_blank" rel="noopener noreferrer">
