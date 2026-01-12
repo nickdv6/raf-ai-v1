@@ -1,38 +1,188 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import siteData from "../data/events.json";
 
 const base = import.meta.env.BASE_URL;
 
-/**
- * TEMP STATIC DATA
- * Replace later with generated data if needed
- */
-const events = [
-  {
-    slug: "raf-2026-01-25",
-    name: "Raleigh Amateur Fights",
-    date: "January 25, 2026",
-    location: "Raleigh, NC",
-  },
-];
+const events = siteData?.events ?? [];
+const eventsWithSlug = events.filter((e) => typeof e?.slug === "string" && e.slug.trim().length > 0);
+
+// Build "Top Value Spots" from events -> bouts.
+// For each bout, pick the side (A or B) with the best positive edge.
+// Then sort by edge descending and take top N.
+// Filters: require positive edge AND exclude Low confidence (case-insensitive).
+const topValueSpots = (events ?? [])
+  .flatMap((ev) =>
+    (ev.bouts ?? []).map((bout) => {
+      const edgeA = Number(bout?.prediction?.edge_a ?? NaN);
+      const edgeB = Number(bout?.prediction?.edge_b ?? NaN);
+
+      const pick =
+        Number.isFinite(edgeA) && Number.isFinite(edgeB)
+          ? edgeA >= edgeB
+            ? { side: "A", edge: edgeA }
+            : { side: "B", edge: edgeB }
+          : Number.isFinite(edgeA)
+            ? { side: "A", edge: edgeA }
+            : Number.isFinite(edgeB)
+              ? { side: "B", edge: edgeB }
+              : null;
+
+      if (!pick || !(pick.edge > 0)) return null;
+
+      const confidenceRaw = bout?.prediction?.confidence;
+      const confidence = typeof confidenceRaw === "string" ? confidenceRaw.trim() : confidenceRaw;
+      const confidenceKey = typeof confidence === "string" ? confidence.toLowerCase() : "";
+
+      // Exclude low confidence from Top Value Spots (still available on event detail page).
+      if (confidenceKey === "low") return null;
+
+      const fighter = pick.side === "A" ? bout?.fighter_a : bout?.fighter_b;
+
+      const oddsAmerican =
+        pick.side === "A"
+          ? bout?.odds?.odds_a_american
+          : bout?.odds?.odds_b_american;
+
+      const prob =
+        pick.side === "A" ? bout?.prediction?.p_a : bout?.prediction?.p_b;
+
+      return {
+        key: `${ev?.slug ?? ev?.event_id ?? "event"}-${bout?.bout_id ?? bout?.bout_order ?? "bout"}-${pick.side}`,
+        eventSlug: ev?.slug,
+        eventName: ev?.event_name,
+        eventDateUtc: ev?.event_date_utc,
+        location: ev?.location,
+        boutOrder: bout?.bout_order,
+        weightClass: bout?.weight_class_lbs,
+        fighter,
+        opponent: pick.side === "A" ? bout?.fighter_b : bout?.fighter_a,
+        side: pick.side,
+        edge: pick.edge,
+        confidence,
+        prob,
+        book: bout?.odds?.book,
+        oddsAmerican,
+      };
+    })
+  )
+  .filter(Boolean)
+  .sort((a, b) => (b.edge ?? 0) - (a.edge ?? 0))
+  .slice(0, 5);
+
+const fmtDate = (iso) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return String(iso);
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+};
+
+const fmtProb = (p) => {
+  const n = Number(p);
+  if (!Number.isFinite(n)) return "";
+  return `${Math.round(n * 100)}%`;
+};
+
+// Edge formatting: show as percent (edge * 100) with one decimal.
+// Example: +0.011 -> +1.1%
+const fmtEdge = (e) => {
+  const n = Number(e);
+  if (!Number.isFinite(n)) return "";
+  const pct = n * 100;
+  const sign = pct >= 0 ? "+" : "";
+  return `${sign}${pct.toFixed(1)}%`;
+};
+
+const fmtAmericanOdds = (o) => {
+  const n = Number(o);
+  if (!Number.isFinite(n)) return "";
+  return n > 0 ? `+${n}` : `${n}`;
+};
 ---
 
-<BaseLayout title="RAF AI Intelligence v1">
-  <section class="card">
-    <h2>Upcoming Events</h2>
+<BaseLayout title="Signal Forge Sports">
+  <div style="display:grid;gap:16px;">
+    <!-- Top Value Spots -->
+    <section class="card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+        <div>
+          <h2 style="margin:0;">Top Value Spots</h2>
+          <div class="small" style="margin-top:6px;">
+            Model-identified pricing inefficiencies based on current market odds.
+          </div>
+        </div>
+      </div>
 
-    <div style="display:grid;gap:16px;">
-      {events.map((event) => (
-        <a
-          class="card"
-          style="text-decoration:none;color:inherit;"
-          href={`${base}events/${event.slug}/`}
-        >
-          <div style="font-weight:700;">{event.name}</div>
-          <div class="small">{event.date}</div>
-          <div class="small">{event.location}</div>
-        </a>
-      ))}
-    </div>
-  </section>
+      {topValueSpots.length > 0 ? (
+        <ol style="margin:12px 0 0 0;padding-left:18px;display:grid;gap:10px;">
+          {topValueSpots.map((s) => (
+            <li>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div style="min-width:0;">
+                  <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                    {s.fighter} <span class="small" style="font-weight:600;">vs</span> {s.opponent}
+                  </div>
+
+                  <div class="small">
+                    {s.eventName ? s.eventName : "Event"}
+                    {s.eventSlug ? ` • ${fmtDate(s.eventDateUtc)}` : ""}
+                    {s.location ? ` • ${s.location}` : ""}
+                    {s.weightClass ? ` • ${s.weightClass} lb` : ""}
+                    {typeof s.boutOrder !== "undefined" ? ` • Bout ${s.boutOrder}` : ""}
+                  </div>
+
+                  <div class="small" style="margin-top:4px;">
+                    Side: {s.side}
+                    {s.prob !== undefined ? ` • P: ${fmtProb(s.prob)}` : ""}
+                    {s.confidence ? ` • ${s.confidence} confidence` : ""}
+                    {s.book ? ` • ${s.book}` : ""}
+                    {s.oddsAmerican !== undefined ? ` • Odds: ${fmtAmericanOdds(s.oddsAmerican)}` : ""}
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                  <span class="pill">Edge {fmtEdge(s.edge)}</span>
+                  {s.eventSlug ? (
+                    <a class="btn btn--sm" href={`${base}events/${s.eventSlug}/`}>View</a>
+                  ) : null}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div style="margin-top:12px;">
+          <div style="font-weight:700;">No qualified value spots right now.</div>
+          <div class="small" style="margin-top:6px;max-width:70ch;">
+            The feed loaded, but no bout currently shows a positive edge versus posted odds (excluding low-confidence signals).
+          </div>
+        </div>
+      )}
+    </section>
+
+    <!-- Upcoming Events -->
+    <section class="card">
+      <h2>Upcoming Events</h2>
+
+      {eventsWithSlug.length > 0 ? (
+        <div style="display:grid;gap:16px;">
+          {eventsWithSlug.map((event) => (
+            <a
+              class="card"
+              style="text-decoration:none;color:inherit;display:block;cursor:pointer;"
+              href={`${base}events/${event.slug}/`}
+            >
+              <div style="font-weight:700;">{event.event_name}</div>
+              <div class="small">{fmtDate(event.event_date_utc)}</div>
+              <div class="small">{event.location}</div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="small">
+          No upcoming events are available yet.
+        </div>
+      )}
+    </section>
+  </div>
 </BaseLayout>
