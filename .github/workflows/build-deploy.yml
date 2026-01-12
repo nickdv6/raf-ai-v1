@@ -1,9 +1,8 @@
-name: Build and Deploy (GitHub Pages)
+name: Build + Deploy (RAF AI)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -11,15 +10,20 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      # ---------- Python: generate fresh site data ----------
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -29,23 +33,35 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run RAF AI pipeline
+      - name: Run RAF pipeline (generates site/src/data/events.json)
         run: |
           python -m raf_ai.pipeline
 
-      - name: Set up Node
+      # Optional: sanity check that export exists
+      - name: Verify generated site data exists
+        run: |
+          test -f site/src/data/events.json
+          echo "Generated site/src/data/events.json:"
+          ls -lah site/src/data/events.json
+          head -n 40 site/src/data/events.json
+
+      # ---------- Node/Astro: build static site ----------
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: site/package-lock.json
 
-      - name: Install Node dependencies
+      - name: Install site dependencies
         working-directory: site
-        run: npm install
+        run: npm ci
 
-      - name: Build Astro site
+      - name: Build site
         working-directory: site
         run: npm run build
 
+      # GitHub Pages artifact upload
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -54,7 +70,11 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
