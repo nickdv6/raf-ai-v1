@@ -2,6 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import siteData from "../../data/events.json";
 import { affiliateConfig } from "../../config/affiliate";
+import { FEATURES } from "../../config/features.ts";
+import { ACTIVE_TIER } from "../../config/access.ts";
+
 
 export function getStaticPaths() {
   const events = siteData?.events ?? [];
@@ -48,6 +51,9 @@ const fmtAmericanOdds = (o) => {
   if (!Number.isFinite(n)) return "";
   return n > 0 ? `+${n}` : `${n}`;
 };
+
+const features = FEATURES[ACTIVE_TIER];
+
 
 // Branding
 const pageTitle = event?.event_name
