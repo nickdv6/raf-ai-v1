@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { PLANS } from "../../config/plans";
 
 const title = "Pricing — Signal Forge Sports";
 
@@ -20,13 +21,13 @@ const annualNote = "Annual plans include 2 months free.";
   </section>
 
   <div style="display:grid;gap:16px;margin-top:16px;">
-    <!-- Free -->
+    {/* Free */}
     <section class="card">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
         <div>
-          <h2 style="margin:0;">Free</h2>
+          <h2 style="margin:0;">{PLANS.free.name}</h2>
           <div class="small" style="margin-top:6px;opacity:0.8;">
-            Public access to Signal Forge Sports core event pages.
+            {PLANS.free.description}
           </div>
         </div>
         <div style="font-weight:800;">$0</div>
@@ -41,18 +42,18 @@ const annualNote = "Annual plans include 2 months free.";
       </ul>
     </section>
 
-    <!-- Basic -->
+    {/* Basic */}
     <section class="card">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
         <div>
-          <h2 style="margin:0;">Forge Basic</h2>
+          <h2 style="margin:0;">{PLANS.basic.name}</h2>
           <div class="small" style="margin-top:6px;opacity:0.8;">
-            More depth and historical context — without advanced tooling.
+            {PLANS.basic.description}
           </div>
         </div>
         <div style="text-align:right;">
-          <div style="font-weight:800;">$19 / month</div>
-          <div class="small" style="opacity:0.8;">$190 / year</div>
+          <div style="font-weight:800;">${PLANS.basic.monthlyPrice} / month</div>
+          <div class="small" style="opacity:0.8;">${PLANS.basic.annualPrice} / year</div>
         </div>
       </div>
 
@@ -69,18 +70,18 @@ const annualNote = "Annual plans include 2 months free.";
       </div>
     </section>
 
-    <!-- Pro -->
+    {/* Pro */}
     <section class="card">
       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
         <div>
-          <h2 style="margin:0;">Forge Pro</h2>
+          <h2 style="margin:0;">{PLANS.pro.name}</h2>
           <div class="small" style="margin-top:6px;opacity:0.8;">
-            Full tooling, filters, and Pro-only features.
+            {PLANS.pro.description}
           </div>
         </div>
         <div style="text-align:right;">
-          <div style="font-weight:800;">$29 / month</div>
-          <div class="small" style="opacity:0.8;">$290 / year</div>
+          <div style="font-weight:800;">${PLANS.pro.monthlyPrice} / month</div>
+          <div class="small" style="opacity:0.8;">${PLANS.pro.annualPrice} / year</div>
         </div>
       </div>
 
