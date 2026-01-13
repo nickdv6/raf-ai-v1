@@ -160,12 +160,13 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
             </div>
           </div>
 
-          <div style="display:flex;align-items:center;gap:8px;">
-            {lastUpdatedIso ? (
-              <span class="pill">Last updated {fmtDateTime(lastUpdatedIso)}</span>
-            ) : null}
-            <a class="btn btn--sm" href={`${base}`}>Back</a>
-          </div>
+         <div style="display:flex;align-items:center;gap:8px;">
+  {lastUpdatedIso ? (
+    <span class="pill">Last updated {fmtDateTime(lastUpdatedIso)}</span>
+  ) : null}
+  <a class="btn btn--sm" href={`${base}`}>Back</a>
+  <a class="btn btn--sm" href="#bouts">Bouts</a>
+</div>
         </div>
 
         <div class="small" style="margin-top:10px;">
