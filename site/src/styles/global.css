@@ -39,6 +39,61 @@ hr {
 }
 
 /* =========================
+   Site Header / Navigation
+   ========================= */
+
+.site-header {
+  background: #12151c; /* subtle lift from page bg */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.site-header__inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.site-header__brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header__name {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.site-header__tagline {
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.site-header__nav {
+  display: flex;
+  gap: 18px;
+}
+
+.site-header__nav a {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 6px 4px;
+  border-bottom: 2px solid transparent;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.site-header__nav a:hover {
+  color: #ffffff;
+  border-bottom-color: rgba(138, 180, 248, 0.5);
+  text-decoration: none;
+}
+
+/* =========================
    Cards
    ========================= */
 
@@ -48,12 +103,22 @@ hr {
   border-radius: 12px;
   padding: 16px;
   margin: 12px 0;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.card:hover {
+  border-color: rgba(138, 180, 248, 0.22);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 /* Prevent nested cards from feeling heavy */
 .card .card {
   margin: 0;
   border-color: rgba(255, 255, 255, 0.10);
+}
+
+a.card:hover {
+  text-decoration: none;
 }
 
 /* =========================
@@ -150,6 +215,17 @@ h2 {
 }
 
 /* =========================
+   Focus / Accessibility
+   ========================= */
+
+a:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid rgba(138, 180, 248, 0.55);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* =========================
    Site Footer / Disclosures
    ========================= */
 
@@ -192,67 +268,4 @@ h2 {
 
 .site-footer__cta a:hover {
   color: rgba(255, 255, 255, 0.9);
-}
-/* =========================
-   Polish: Hover + Focus
-   ========================= */
-
-.card {
-  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
-}
-
-.card:hover {
-  border-color: rgba(138, 180, 248, 0.22);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-a:focus-visible,
-.btn:focus-visible {
-  outline: 2px solid rgba(138, 180, 248, 0.55);
-  outline-offset: 2px;
-  border-radius: 10px;
-}
-/* =========================
-   Site Header / Navigation
-   ========================= */
-
-.site-header {
-  padding: 14px 16px;
-}
-
-.site-header__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.site-header__brand {
-  display: flex;
-  flex-direction: column;
-}
-
-.site-header__name {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.site-header__tagline {
-  margin-top: 2px;
-}
-
-.site-header__nav {
-  display: flex;
-  gap: 14px;
-}
-
-.site-header__nav a {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.site-header__nav a:hover {
-  color: rgba(255, 255, 255, 1);
-  text-decoration: none;
 }
