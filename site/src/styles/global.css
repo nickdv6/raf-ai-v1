@@ -13,6 +13,7 @@ body {
   color: #e6e6e6;
 }
 
+/* Global links (content links) */
 a {
   color: #7aa2ff;
   text-decoration: none;
@@ -24,7 +25,7 @@ a:hover {
 
 hr {
   border: none;
-  border-top: 1px solid #2a2f3a;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
   margin: 18px 0;
 }
 
@@ -32,64 +33,72 @@ hr {
    Layout
    ========================= */
 
+/* Narrower column for better scanability */
 .container {
-  max-width: 960px;
+  max-width: 760px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 22px 20px 28px;
 }
 
 /* =========================
-   Site Header / Navigation
+   Top Bar / Navigation
    ========================= */
 
-.site-header {
-  background: #12151c; /* subtle lift from page bg */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+.site-topbar {
+  margin: 0 0 18px 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.site-header__inner {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px 24px;
+.site-topbar__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
 }
 
-.site-header__brand {
+.site-topbar__brand {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
-.site-header__name {
-  font-size: 18px;
-  font-weight: 700;
+.site-topbar__name {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.95);
   line-height: 1.2;
 }
 
-.site-header__tagline {
+.site-topbar__tagline {
   margin-top: 2px;
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.60);
 }
 
-.site-header__nav {
+.site-topbar__nav {
   display: flex;
-  gap: 18px;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
 }
 
-.site-header__nav a {
+.site-topbar__link {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.75);
-  padding: 6px 4px;
-  border-bottom: 2px solid transparent;
-  transition: color 120ms ease, border-color 120ms ease;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 10px;
+  transition: color 120ms ease, background 120ms ease;
 }
 
-.site-header__nav a:hover {
-  color: #ffffff;
-  border-bottom-color: rgba(138, 180, 248, 0.5);
+.site-topbar__link:hover {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.05);
   text-decoration: none;
 }
 
@@ -99,24 +108,26 @@ hr {
 
 .card {
   background: #171a21;
-  border: 1px solid #2a2f3a;
-  border-radius: 12px;
-  padding: 16px;
-  margin: 12px 0;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 14px;
+  padding: 14px 14px;
+  margin: 14px 0;
   transition: border-color 120ms ease, background 120ms ease;
 }
 
+/* Subtle card hover: modern, restrained */
 .card:hover {
-  border-color: rgba(138, 180, 248, 0.22);
+  border-color: rgba(138, 180, 248, 0.18);
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Prevent nested cards from feeling heavy */
+/* Nested cards should not “double-thicken” */
 .card .card {
   margin: 0;
-  border-color: rgba(255, 255, 255, 0.10);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
+/* Clickable cards should not underline */
 a.card:hover {
   text-decoration: none;
 }
@@ -128,47 +139,21 @@ a.card:hover {
 h1,
 h2 {
   letter-spacing: -0.01em;
+  margin: 0;
 }
 
 h1 {
-  font-size: 1.6rem;
+  font-size: 1.55rem;
 }
 
 h2 {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
 }
 
 .small {
   font-size: 13px;
   line-height: 1.45;
-  color: #9aa4b2;
-}
-
-/* =========================
-   Tables
-   ========================= */
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th,
-.table td {
-  padding: 10px;
-  border-bottom: 1px solid #223047;
-  vertical-align: top;
-}
-
-.table thead th {
-  position: sticky;
-  top: 0;
-  background: #171a21;
-  z-index: 1;
-}
-
-.table tbody tr:hover {
-  background: rgba(138, 180, 248, 0.06);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 /* =========================
@@ -181,7 +166,7 @@ h2 {
   align-items: center;
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(138, 180, 248, 0.22);
+  border: 1px solid rgba(138, 180, 248, 0.20);
   background: rgba(138, 180, 248, 0.08);
   color: rgba(255, 255, 255, 0.90);
   font-size: 0.8rem;
@@ -207,11 +192,39 @@ h2 {
 
 .btn:hover {
   background: rgba(255, 255, 255, 0.07);
+  text-decoration: none;
 }
 
 .btn--sm {
   padding: 6px 10px;
   font-size: 0.85rem;
+}
+
+/* =========================
+   Tables
+   ========================= */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  vertical-align: top;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: #171a21;
+  z-index: 1;
+}
+
+.table tbody tr:hover {
+  background: rgba(138, 180, 248, 0.06);
 }
 
 /* =========================
@@ -229,9 +242,11 @@ a:focus-visible,
    Site Footer / Disclosures
    ========================= */
 
+/* Footer should read like a legal floor, not a “section card” */
 .site-footer {
-  margin-top: 28px;
-  padding-bottom: 28px;
+  margin-top: 22px;
+  padding-top: 18px;
+  padding-bottom: 26px;
 }
 
 .site-footer__rule {
@@ -243,7 +258,8 @@ a:focus-visible,
 .site-footer__inner {
   font-size: 0.75rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.70);
+  color: rgba(255, 255, 255, 0.62);
+  max-width: 70ch;
 }
 
 .site-footer__disclaimer,
@@ -252,20 +268,20 @@ a:focus-visible,
 }
 
 .site-footer__affiliate {
-  color: rgba(255, 255, 255, 0.60);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .site-footer__cta {
   margin-top: 10px;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: rgba(255, 255, 255, 0.55);
 }
 
 .site-footer__cta a {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.78);
   text-decoration: underline;
 }
 
 .site-footer__cta a:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.92);
 }
