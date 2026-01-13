@@ -212,3 +212,47 @@ a:focus-visible,
   outline-offset: 2px;
   border-radius: 10px;
 }
+/* =========================
+   Site Header / Navigation
+   ========================= */
+
+.site-header {
+  padding: 14px 16px;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.site-header__brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header__name {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.site-header__tagline {
+  margin-top: 2px;
+}
+
+.site-header__nav {
+  display: flex;
+  gap: 14px;
+}
+
+.site-header__nav a {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.site-header__nav a:hover {
+  color: rgba(255, 255, 255, 1);
+  text-decoration: none;
+}

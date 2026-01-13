@@ -39,39 +39,59 @@ const tagline = "AI-driven signals for RAF and emerging sports markets.";
 
   <body>
     <div class="container">
-      <header class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-          <div>
-            <div style="font-size:18px;font-weight:700;">
-              {brandName}
-            </div>
-            <div class="small">
-              {tagline}
-            </div>
-          </div>
+      <header class="card site-header">
+  <div class="site-header__inner">
+    <div class="site-header__brand">
+      <div class="site-header__name">
+        {brandName}
+      </div>
+      <div class="small site-header__tagline">
+        {tagline}
+      </div>
+    </div>
 
-          <nav style="display:flex;gap:12px;">
-            <!-- Home MUST include base -->
-            <a href={base}>Home</a>
-            <a href={`${base}about/`}>About</a>
-	    <a href={`${base}pricing/`}>Pricing</a>
-            <a href={`${base}disclaimer/`}>Disclaimer</a>
-          </nav>
-        </div>
-      </header>
+    <nav class="site-header__nav">
+      <a href={base}>Home</a>
+      <a href={`${base}about/`}>About</a>
+      <a href={`${base}pricing/`}>Pricing</a>
+      <a href={`${base}disclaimer/`}>Disclaimer</a>
+    </nav>
+  </div>
+</header>
 
       <main>
         <slot />
       </main>
 
-      <footer class="small" style="margin-top:28px;padding-bottom:28px;">
-        <hr />
-        <div>
-          Signal Forge Sports provides analytical information only and does not
-          offer betting advice, picks, or guarantees. If you choose to participate
-          in regulated wagering, do so responsibly and in accordance with your local laws.
-        </div>
-      </footer>
+
+     <footer class="site-footer" aria-label="Site disclaimer and disclosures">
+  <hr class="site-footer__rule" />
+
+  <div class="site-footer__inner">
+    <p class="site-footer__disclaimer">
+      Signal Forge Sports provides analytical insights and informational signals only.
+      Content is not betting advice, investment advice, or a guarantee of outcomes.
+      Decisions remain solely the responsibility of the user.
+    </p>
+
+    <p class="site-footer__affiliate">
+      Signal Forge Sports may receive compensation from affiliated partners.
+      This does not influence signal generation, ranking, or displayed values.
+    </p>
+
+    <p class="site-footer__cta">
+  	View supported sportsbooks:
+  	<a href="#" rel="nofollow noopener" target="_blank">
+   	 FanDuel
+  	</a>,
+  	<a href="#" rel="nofollow noopener" target="_blank">
+   	 DraftKings
+  	</a>
+    </p>
+
+  </div>
+</footer>
+
     </div>
   </body>
 </html>
