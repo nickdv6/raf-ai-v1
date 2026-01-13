@@ -2,11 +2,6 @@
 const { title = "Signal Forge Sports" } = Astro.props;
 const base = import.meta.env.BASE_URL;
 
-/**
- * Cache-bust CSS in dev so style changes always apply
- * without hard refresh. In production, keep stable
- * unless manually bumped.
- */
 const cssVersion = import.meta.env.DEV ? Date.now() : "1";
 
 const brandName = "Signal Forge Sports";
@@ -33,29 +28,28 @@ const tagline = "AI-driven signals for RAF and emerging sports markets.";
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={tagline} />
 
-    <!-- BASE_URL-safe stylesheet with cache busting -->
     <link rel="stylesheet" href={`${base}styles/global.css?v=${cssVersion}`} />
   </head>
 
   <body>
-    <div class="container">
-      <!-- Top Bar -->
-      <header class="site-topbar" role="banner">
-        <div class="site-topbar__inner">
-          <div class="site-topbar__brand">
-            <div class="site-topbar__name">{brandName}</div>
-            <div class="site-topbar__tagline">{tagline}</div>
-          </div>
-
-          <nav class="site-topbar__nav" aria-label="Primary navigation">
-            <a class="site-topbar__link" href={base}>Home</a>
-            <a class="site-topbar__link" href={`${base}about/`}>About</a>
-            <a class="site-topbar__link" href={`${base}pricing/`}>Pricing</a>
-            <a class="site-topbar__link" href={`${base}disclaimer/`}>Disclaimer</a>
-          </nav>
+    <!-- Full-width top bar -->
+    <header class="topbar" role="banner">
+      <div class="topbar__inner">
+        <div class="topbar__brand">
+          <div class="topbar__name">{brandName}</div>
+          <div class="topbar__tagline">{tagline}</div>
         </div>
-      </header>
 
+        <nav class="topbar__nav" aria-label="Primary navigation">
+          <a class="topbar__link" href={base}>Home</a>
+          <a class="topbar__link" href={`${base}about/`}>About</a>
+          <a class="topbar__link" href={`${base}pricing/`}>Pricing</a>
+          <a class="topbar__link" href={`${base}disclaimer/`}>Disclaimer</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
       <main>
         <slot />
       </main>
