@@ -62,5 +62,87 @@ hr {
   border: none;
   border-top: 1px solid #2a2f3a;
 }
+/* =========================
+   Site Footer / Disclosures
+   ========================= */
+
+.site-footer {
+  margin-top: 28px;
+  padding-bottom: 28px;
+}
+
+.site-footer__rule {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  margin: 0 0 12px 0;
+}
+
+.site-footer__inner {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.70);
+}
+
+.site-footer__disclaimer,
+.site-footer__affiliate {
+  margin: 8px 0;
+}
+
+.site-footer__affiliate {
+  color: rgba(255, 255, 255, 0.60);
+}
+.site-footer__cta {
+  margin-top: 10px;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.site-footer__cta a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: underline;
+}
+
+.site-footer__cta a:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+/* =========================
+   Buttons
+   ========================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.btn--sm {
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+/* =========================
+   Pills
+   ========================= */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 180, 248, 0.22);
+  background: rgba(138, 180, 248, 0.08);
+  color: rgba(255, 255, 255, 0.90);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
 
 
