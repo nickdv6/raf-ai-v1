@@ -1,47 +1,16 @@
-:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-body { margin: 0; background: #0b0f14; color: #e6edf3; }
-a { color: #8ab4f8; text-decoration: none; }
-a:hover { text-decoration: underline; }
-.container { max-width: 1040px; margin: 0 auto; padding: 24px; }
-.card { background: #111826; border: 1px solid #223047; border-radius: 12px; padding: 16px; margin: 12px 0; }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid #2a3a55; font-size: 12px; }
-.table { width: 100%; border-collapse: collapse; }
-.table th, .table td { padding: 10px; border-bottom: 1px solid #223047; vertical-align: top; }
-.small { opacity: 0.85; font-size: 13px; }
-hr { border: 0; border-top: 1px solid #223047; margin: 18px 0; }
-.table thead th {
-  position: sticky;
-  top: 0;
-  background: #111826;
-  z-index: 1;
-}
+/* =========================
+   Base / Reset
+   ========================= */
 
-.table tbody tr:hover {
-  background: rgba(138, 180, 248, 0.06);
-}
-
-.badge {
-  background: rgba(138, 180, 248, 0.08);
-}
-body {
+:root {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
   background: #0f1115;
   color: #e6e6e6;
-  margin: 0;
-}
-
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.card {
-  background: #171a21;
-  border: 1px solid #2a2f3a;
-  border-radius: 8px;
-  padding: 16px;
 }
 
 a {
@@ -53,15 +22,133 @@ a:hover {
   text-decoration: underline;
 }
 
-.small {
-  font-size: 13px;
-  color: #9aa4b2;
-}
-
 hr {
   border: none;
   border-top: 1px solid #2a2f3a;
+  margin: 18px 0;
 }
+
+/* =========================
+   Layout
+   ========================= */
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* =========================
+   Cards
+   ========================= */
+
+.card {
+  background: #171a21;
+  border: 1px solid #2a2f3a;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+/* Prevent nested cards from feeling heavy */
+.card .card {
+  margin: 0;
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+/* =========================
+   Typography helpers
+   ========================= */
+
+h1,
+h2 {
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 1.6rem;
+}
+
+h2 {
+  font-size: 1.2rem;
+}
+
+.small {
+  font-size: 13px;
+  line-height: 1.45;
+  color: #9aa4b2;
+}
+
+/* =========================
+   Tables
+   ========================= */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  border-bottom: 1px solid #223047;
+  vertical-align: top;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: #171a21;
+  z-index: 1;
+}
+
+.table tbody tr:hover {
+  background: rgba(138, 180, 248, 0.06);
+}
+
+/* =========================
+   Pills / Badges
+   ========================= */
+
+.pill,
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 180, 248, 0.22);
+  background: rgba(138, 180, 248, 0.08);
+  color: rgba(255, 255, 255, 0.90);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+/* =========================
+   Buttons
+   ========================= */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.btn--sm {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
 /* =========================
    Site Footer / Disclosures
    ========================= */
@@ -91,6 +178,7 @@ hr {
 .site-footer__affiliate {
   color: rgba(255, 255, 255, 0.60);
 }
+
 .site-footer__cta {
   margin-top: 10px;
   font-size: 0.7rem;
@@ -105,44 +193,3 @@ hr {
 .site-footer__cta a:hover {
   color: rgba(255, 255, 255, 0.9);
 }
-/* =========================
-   Buttons
-   ========================= */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.92);
-  text-decoration: none;
-}
-
-.btn:hover {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.btn--sm {
-  padding: 6px 10px;
-  border-radius: 10px;
-  font-size: 0.85rem;
-}
-/* =========================
-   Pills
-   ========================= */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(138, 180, 248, 0.22);
-  background: rgba(138, 180, 248, 0.08);
-  color: rgba(255, 255, 255, 0.90);
-  font-size: 0.8rem;
-  white-space: nowrap;
-}
-
-
