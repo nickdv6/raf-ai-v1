@@ -23,10 +23,10 @@ const topValueSpots = (events ?? [])
             ? { side: "A", edge: edgeA }
             : { side: "B", edge: edgeB }
           : Number.isFinite(edgeA)
-            ? { side: "A", edge: edgeA }
-            : Number.isFinite(edgeB)
-              ? { side: "B", edge: edgeB }
-              : null;
+          ? { side: "A", edge: edgeA }
+          : Number.isFinite(edgeB)
+          ? { side: "B", edge: edgeB }
+          : null;
 
       if (!pick || !(pick.edge > 0)) return null;
 
@@ -39,13 +39,9 @@ const topValueSpots = (events ?? [])
 
       const fighter = pick.side === "A" ? bout?.fighter_a : bout?.fighter_b;
 
-      const oddsAmerican =
-        pick.side === "A"
-          ? bout?.odds?.odds_a_american
-          : bout?.odds?.odds_b_american;
+      const oddsAmerican = pick.side === "A" ? bout?.odds?.odds_a_american : bout?.odds?.odds_b_american;
 
-      const prob =
-        pick.side === "A" ? bout?.prediction?.p_a : bout?.prediction?.p_b;
+      const prob = pick.side === "A" ? bout?.prediction?.p_a : bout?.prediction?.p_b;
 
       return {
         key: `${ev?.slug ?? ev?.event_id ?? "event"}-${bout?.bout_id ?? bout?.bout_order ?? "bout"}-${pick.side}`,
@@ -102,13 +98,21 @@ const fmtAmericanOdds = (o) => {
 
 <BaseLayout title="Signal Forge Sports">
   <div style="display:grid;gap:16px;">
+    <!-- Page Header -->
+    <section class="card">
+      <h1 style="margin:0;">Signals</h1>
+      <div class="small" style="margin-top:6px;max-width:70ch;">
+        Live, model-derived pricing signals across upcoming cards. Signals are informational only.
+      </div>
+    </section>
+
     <!-- Top Value Spots -->
     <section class="card">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;">
         <div>
           <h2 style="margin:0;">Top Value Spots</h2>
-          <div class="small" style="margin-top:6px;">
-            Model-identified pricing inefficiencies based on current market odds.
+          <div class="small" style="margin-top:6px;max-width:70ch;">
+            Model-identified pricing inefficiencies based on current market odds (excluding low-confidence signals).
           </div>
         </div>
       </div>
@@ -119,13 +123,13 @@ const fmtAmericanOdds = (o) => {
             <li>
               <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
                 <div style="min-width:0;">
-                  <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  <div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                     {s.fighter} <span class="small" style="font-weight:600;">vs</span> {s.opponent}
                   </div>
 
-                  <div class="small">
+                  <div class="small" style="margin-top:4px;">
                     {s.eventName ? s.eventName : "Event"}
-                    {s.eventSlug ? ` • ${fmtDate(s.eventDateUtc)}` : ""}
+                    {s.eventDateUtc ? ` • ${fmtDate(s.eventDateUtc)}` : ""}
                     {s.location ? ` • ${s.location}` : ""}
                     {s.weightClass ? ` • ${s.weightClass} lb` : ""}
                     {typeof s.boutOrder !== "undefined" ? ` • Bout ${s.boutOrder}` : ""}
@@ -152,9 +156,12 @@ const fmtAmericanOdds = (o) => {
         </ol>
       ) : (
         <div style="margin-top:12px;">
-          <div style="font-weight:700;">No qualified value spots right now.</div>
+          <div style="font-weight:800;">No positive edge identified at current prices.</div>
           <div class="small" style="margin-top:6px;max-width:70ch;">
-            The feed loaded, but no bout currently shows a positive edge versus posted odds (excluding low-confidence signals).
+            This may change as odds update or market conditions shift.
+          </div>
+          <div class="small" style="margin-top:6px;opacity:0.7;">
+            Edge = difference between model probability and implied odds.
           </div>
         </div>
       )}
@@ -162,24 +169,31 @@ const fmtAmericanOdds = (o) => {
 
     <!-- Upcoming Events -->
     <section class="card">
-      <h2>Upcoming Events</h2>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;">
+        <h2 style="margin:0;">Upcoming Events</h2>
+      </div>
 
       {eventsWithSlug.length > 0 ? (
-        <div style="display:grid;gap:16px;">
+        <div style="display:grid;gap:12px;margin-top:12px;">
           {eventsWithSlug.map((event) => (
-            <a
-              class="card"
-              style="text-decoration:none;color:inherit;display:block;cursor:pointer;"
-              href={`${base}events/${event.slug}/`}
-            >
-              <div style="font-weight:700;">{event.event_name}</div>
-              <div class="small">{fmtDate(event.event_date_utc)}</div>
-              <div class="small">{event.location}</div>
+            <a class="card" href={`${base}events/${event.slug}/`} style="display:block;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div style="min-width:0;">
+                  <div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                    {event.event_name}
+                  </div>
+                  <div class="small" style="margin-top:6px;">
+                    {fmtDate(event.event_date_utc)}
+                    {event.location ? ` • ${event.location}` : ""}
+                  </div>
+                </div>
+                <span class="pill">View</span>
+              </div>
             </a>
           ))}
         </div>
       ) : (
-        <div class="small">
+        <div class="small" style="margin-top:10px;">
           No upcoming events are available yet.
         </div>
       )}
