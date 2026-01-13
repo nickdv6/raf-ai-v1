@@ -1,3 +1,4 @@
+---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import siteData from "../../data/events.json";
 import { affiliateConfig } from "../../config/affiliate";
@@ -51,6 +52,7 @@ const fmtProb = (p) => {
   return `${Math.round(n * 100)}%`;
 };
 
+// Edge formatting (match homepage): show as percent (edge * 100) with one decimal
 const fmtEdge = (e) => {
   const n = Number(e);
   if (!Number.isFinite(n)) return "";
@@ -75,6 +77,7 @@ const upgradeBody =
     ? "Forge Pro unlocks edge sorting/filtering and Pro-only market tools."
     : "Forge Basic adds historical access. Forge Pro unlocks edge sorting/filtering and Pro-only tools.";
 
+// Branding
 const pageTitle = event?.event_name
   ? `${event.event_name} — Signal Forge Sports`
   : "Event — Signal Forge Sports";
@@ -85,6 +88,10 @@ const bouts = (event?.bouts ?? [])
   .slice()
   .sort((a, b) => (a?.bout_order ?? 0) - (b?.bout_order ?? 0));
 
+/**
+ * Event Highlight: best single positive edge on the card (excluding Low confidence).
+ * We choose the best side per bout (A or B), then select the best overall.
+ */
 const confidenceKey = (c) => (typeof c === "string" ? c.trim().toLowerCase() : "");
 
 const highlightCandidates = bouts
@@ -108,21 +115,24 @@ const highlightCandidates = bouts
 
     if (!pick || !(pick.edge > 0)) return null;
 
+    const fighter = pick.side === "A" ? b?.fighter_a : b?.fighter_b;
+    const opponent = pick.side === "A" ? b?.fighter_b : b?.fighter_a;
+    const prob = pick.side === "A" ? b?.prediction?.p_a : b?.prediction?.p_b;
+    const oddsAmerican =
+      pick.side === "A" ? b?.odds?.odds_a_american : b?.odds?.odds_b_american;
+
     return {
       boutId: b?.bout_id,
       boutOrder: b?.bout_order,
       weightClass: b?.weight_class_lbs,
-      fighter: pick.side === "A" ? b?.fighter_a : b?.fighter_b,
-      opponent: pick.side === "A" ? b?.fighter_b : b?.fighter_a,
+      fighter,
+      opponent,
       side: pick.side,
       edge: pick.edge,
       confidence: conf,
-      prob: pick.side === "A" ? b?.prediction?.p_a : b?.prediction?.p_b,
+      prob,
       book: b?.odds?.book,
-      oddsAmerican:
-        pick.side === "A"
-          ? b?.odds?.odds_a_american
-          : b?.odds?.odds_b_american,
+      oddsAmerican,
       oddsTimestamp: b?.odds?.odds_timestamp_utc,
     };
   })
@@ -130,12 +140,10 @@ const highlightCandidates = bouts
 
 const bestHighlight =
   highlightCandidates.length > 0
-    ? highlightCandidates.sort((a, b) => b.edge - a.edge)[0]
+    ? highlightCandidates.slice().sort((a, b) => (b.edge ?? 0) - (a.edge ?? 0))[0]
     : null;
 
-const highlightAnchor = bestHighlight?.boutId
-  ? `#bout-${bestHighlight.boutId}`
-  : "";
+const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` : "";
 ---
 
 <BaseLayout title={pageTitle}>
@@ -143,7 +151,7 @@ const highlightAnchor = bestHighlight?.boutId
     <div id="top" style="display:grid;gap:16px;">
       <!-- Event Header -->
       <section class="card">
-        <div style="display:flex;justify-content:space-between;gap:12px;">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
           <div>
             <h1 style="margin:0;">{event.event_name}</h1>
             <div class="small" style="margin-top:8px;">
@@ -153,50 +161,72 @@ const highlightAnchor = bestHighlight?.boutId
           </div>
 
           <div style="display:flex;align-items:center;gap:8px;">
-            {lastUpdatedIso && (
+            {lastUpdatedIso ? (
               <span class="pill">Last updated {fmtDateTime(lastUpdatedIso)}</span>
-            )}
+            ) : null}
             <a class="btn btn--sm" href={`${base}`}>Back</a>
             <a class="btn btn--sm" href="#bouts">Bouts</a>
           </div>
         </div>
 
         <div class="small" style="margin-top:10px;">
-          Event ID: <strong>{event.event_id}</strong>
-          {event.slug && <> • Slug: <strong>{event.slug}</strong></>}
+          Event ID: <span style="font-weight:700;">{event.event_id}</span>
+          {event.slug ? (
+            <span>
+              {" "}
+              • Slug: <span style="font-weight:700;">{event.slug}</span>
+            </span>
+          ) : null}
         </div>
       </section>
 
-      <!-- Card Highlight -->
+      <!-- Event Highlight -->
       <section class="card">
-        <h2 style="margin:0;">Card Highlight</h2>
-        <div class="small" style="margin-top:6px;">
-          Best model-identified pricing inefficiency on this card (excluding low-confidence signals).
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+          <div>
+            <h2 style="margin:0;">Card Highlight</h2>
+            <div class="small" style="margin-top:6px;">
+              Best model-identified pricing inefficiency on this card (excluding low-confidence signals).
+            </div>
+          </div>
         </div>
 
         {bestHighlight ? (
           <div class="card" style="margin-top:12px;padding:14px;">
-            <div style="display:flex;justify-content:space-between;gap:12px;">
-              <div>
-                <strong>
-                  {bestHighlight.fighter} vs {bestHighlight.opponent}
-                </strong>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+              <div style="min-width:0;">
+                <div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                  {bestHighlight.fighter} <span class="small" style="font-weight:600;">vs</span>{" "}
+                  {bestHighlight.opponent}
+                </div>
+
                 <div class="small" style="margin-top:6px;">
-                  Bout {bestHighlight.boutOrder}
-                  {bestHighlight.confidence && ` • ${bestHighlight.confidence} confidence`}
+                  {bestHighlight.weightClass ? `${bestHighlight.weightClass} lb` : "Weight: —"}
+                  {typeof bestHighlight.boutOrder !== "undefined" ? ` • Bout ${bestHighlight.boutOrder}` : ""}
+                  {bestHighlight.confidence ? ` • ${bestHighlight.confidence} confidence` : ""}
+                </div>
+
+                <div class="small" style="margin-top:6px;">
+                  Side: {bestHighlight.side}
+                  {bestHighlight.prob !== undefined ? ` • P: ${fmtProb(bestHighlight.prob)}` : ""}
+                  {bestHighlight.book ? ` • ${bestHighlight.book}` : ""}
+                  {bestHighlight.oddsAmerican !== undefined ? ` • Odds: ${fmtAmericanOdds(bestHighlight.oddsAmerican)}` : ""}
+                  {bestHighlight.oddsTimestamp ? ` • Updated: ${fmtDateTime(bestHighlight.oddsTimestamp)}` : ""}
                 </div>
               </div>
 
-              <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;flex-shrink:0;">
                 <span class="pill">Edge {fmtEdge(bestHighlight.edge)}</span>
+
                 <div class="small" style="opacity:0.7;">
                   Edge = difference between model probability and implied odds.
                 </div>
-                {lastUpdatedIso && (
+
+                {lastUpdatedIso ? (
                   <div class="small" style="opacity:0.6;">
                     Prices last updated {fmtDateTime(lastUpdatedIso)}
                   </div>
-                )}
+                ) : null}
               </div>
             </div>
 
@@ -206,8 +236,8 @@ const highlightAnchor = bestHighlight?.boutId
           </div>
         ) : (
           <div style="margin-top:12px;">
-            <strong>No positive edge identified at current prices.</strong>
-            <div class="small" style="margin-top:6px;">
+            <div style="font-weight:700;">No positive edge identified at current prices.</div>
+            <div class="small" style="margin-top:6px;max-width:70ch;">
               This may change as odds update or market conditions shift.
             </div>
             <div class="small" style="margin-top:6px;opacity:0.7;">
@@ -216,17 +246,30 @@ const highlightAnchor = bestHighlight?.boutId
           </div>
         )}
 
-        {features.showUpgradePrompt && (
+        {features.showUpgradePrompt ? (
           <div class="card" style="margin-top:12px;padding:14px;">
-            <strong>{upgradeTitle}</strong>
-            <div class="small" style="margin-top:6px;">
+            <div style="font-weight:800;">{upgradeTitle}</div>
+            <div class="small" style="margin-top:6px;max-width:70ch;">
               {upgradeBody}
             </div>
             <div style="margin-top:10px;">
               <a class="btn btn--sm" href={`${base}pricing/`}>View plans</a>
             </div>
           </div>
-        )}
+        ) : null}
+
+        {features.showAffiliateCTA && affiliateConfig.enabled && affiliateConfig.url ? (
+          <div class="card" style="margin-top:12px;padding:14px;">
+            <div class="small">
+              <a href={affiliateConfig.url} target="_blank" rel="noopener noreferrer">
+                {affiliateConfig.label}
+              </a>
+              <div class="small" style="margin-top:4px;opacity:0.7;">
+                Market availability varies by state.
+              </div>
+            </div>
+          </div>
+        ) : null}
       </section>
 
       <!-- Bouts -->
@@ -235,13 +278,102 @@ const highlightAnchor = bestHighlight?.boutId
 
         {bouts.length > 0 ? (
           <div style="display:grid;gap:12px;">
-            {bouts.map((b) => (
-              <div class="card" id={`bout-${b?.bout_id}`} style="padding:14px;">
-                <strong>
-                  Bout {b?.bout_order}: {b?.fighter_a} vs {b?.fighter_b}
-                </strong>
-              </div>
-            ))}
+            {bouts.map((b) => {
+              const pA = b?.prediction?.p_a;
+              const pB = b?.prediction?.p_b;
+              const edgeA = b?.prediction?.edge_a;
+              const edgeB = b?.prediction?.edge_b;
+              const conf = b?.prediction?.confidence;
+
+              const oddsA = b?.odds?.odds_a_american;
+              const oddsB = b?.odds?.odds_b_american;
+
+              const winner = b?.outcome?.winner;
+              const method = b?.outcome?.method;
+
+              const boutId = b?.bout_id ?? `order-${b?.bout_order ?? "x"}`;
+
+              const isHighlightedBout = Boolean(bestHighlight?.boutId && bestHighlight.boutId === b?.bout_id);
+              const highlightedSide = isHighlightedBout ? bestHighlight?.side : null;
+
+              return (
+                <div class="card" id={`bout-${boutId}`} style="padding:14px;">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                    <div style="min-width:0;">
+                      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <div style="font-weight:800;">
+                          Bout {b?.bout_order ?? "—"}: {b?.fighter_a ?? "Fighter A"} vs {b?.fighter_b ?? "Fighter B"}
+                        </div>
+
+                        {isHighlightedBout ? <span class="pill">Card Highlight</span> : null}
+                        {highlightedSide ? <span class="pill">Highlighted Side: {highlightedSide}</span> : null}
+                      </div>
+
+                      <div class="small" style="margin-top:6px;">
+                        {b?.weight_class_lbs ? `${b.weight_class_lbs} lb` : "Weight: —"}
+                        {b?.bout_id ? ` • Bout ID: ${b.bout_id}` : ""}
+                      </div>
+                    </div>
+
+                    {conf ? <span class="pill">{conf} confidence</span> : null}
+                  </div>
+
+                  <!-- Prediction / Odds -->
+                  <div style="display:grid;grid-template-columns: 1fr 1fr;gap:12px;margin-top:12px;">
+                    <div class="card" style="padding:12px;">
+                      <div style="font-weight:700;">
+                        Side A {isHighlightedBout && highlightedSide === "A" ? <span class="pill" style="margin-left:8px;">Highlight</span> : null}
+                      </div>
+                      <div class="small" style="margin-top:6px;">
+                        {b?.fighter_a ?? "—"}
+                      </div>
+                      <div class="small" style="margin-top:6px;">
+                        P: {fmtProb(pA)} {Number.isFinite(Number(edgeA)) ? ` • Edge: ${fmtEdge(edgeA)}` : ""}
+                      </div>
+                      <div class="small" style="margin-top:6px;">
+                        Odds: {fmtAmericanOdds(oddsA)}
+                      </div>
+                    </div>
+
+                    <div class="card" style="padding:12px;">
+                      <div style="font-weight:700;">
+                        Side B {isHighlightedBout && highlightedSide === "B" ? <span class="pill" style="margin-left:8px;">Highlight</span> : null}
+                      </div>
+                      <div class="small" style="margin-top:6px;">
+                        {b?.fighter_b ?? "—"}
+                      </div>
+                      <div class="small" style="margin-top:6px;">
+                        P: {fmtProb(pB)} {Number.isFinite(Number(edgeB)) ? ` • Edge: ${fmtEdge(edgeB)}` : ""}
+                      </div>
+                      <div class="small" style="margin-top:6px;">
+                        Odds: {fmtAmericanOdds(oddsB)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Odds Metadata -->
+                  <div class="small" style="margin-top:10px;">
+                    {b?.odds?.book ? (
+                      <span>
+                        Book: <span style="font-weight:700;">{b.odds.book}</span>
+                      </span>
+                    ) : null}
+                    {b?.odds?.odds_timestamp_utc ? (
+                      <span> • Odds updated: {fmtDateTime(b.odds.odds_timestamp_utc)}</span>
+                    ) : null}
+                  </div>
+
+                  <!-- Outcome (if present) -->
+                  {winner ? (
+                    <div class="small" style="margin-top:10px;">
+                      Result: <span style="font-weight:800;">Winner {winner}</span>
+                      {method ? ` • ${method}` : ""}
+                      {b?.outcome?.recorded_timestamp_utc ? ` • Recorded: ${fmtDateTime(b.outcome.recorded_timestamp_utc)}` : ""}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div class="small">No bouts available for this event.</div>
@@ -254,12 +386,13 @@ const highlightAnchor = bestHighlight?.boutId
     </div>
   ) : (
     <section class="card">
-      <h1>Event not found</h1>
+      <h1 style="margin-top:0;">Event not found</h1>
       <div class="small">
-        No event matches slug: <strong>{slug}</strong>
+        No event matches slug: <span style="font-weight:700;">{slug}</span>
       </div>
       <div style="margin-top:12px;">
         <a class="btn btn--sm" href={`${base}`}>Back</a>
+        <a class="btn btn--sm" href="#bouts">Bouts</a>
       </div>
     </section>
   )}
