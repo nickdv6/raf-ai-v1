@@ -269,8 +269,8 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
       </section>
 
       <!-- Bouts -->
-      <section class="card">
-        <h2 style="margin-top:0;">Bouts</h2>
+      <section class="card" id="bouts">
+  	<h2 style="margin-top:0;">Bouts</h2>
 
         {bouts.length > 0 ? (
           <div style="display:grid;gap:12px;">
@@ -377,7 +377,8 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
         No event matches slug: <span style="font-weight:700;">{slug}</span>
       </div>
       <div style="margin-top:12px;">
-        <a class="btn btn--sm" href={`${base}`}>Back</a>
+        <a class="btn btn--sm" href={`${base}`}>Back</a> 
+	<a class="btn btn--sm" href="#bouts">Bouts</a>
       </div>
     </section>
   )}
