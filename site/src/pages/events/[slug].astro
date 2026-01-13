@@ -219,11 +219,14 @@ const highlightAnchor = bestHighlight?.boutId ? `#bout-${bestHighlight.boutId}` 
           </div>
         ) : (
           <div style="margin-top:12px;">
-            <div style="font-weight:700;">No highlight spot right now.</div>
-            <div class="small" style="margin-top:6px;max-width:70ch;">
-              This can happen if no bout has a positive edge versus posted odds once low-confidence signals are excluded.
-            </div>
-          </div>
+  <div style="font-weight:700;">
+    No positive edge identified at current prices.
+  </div>
+  <div class="small" style="margin-top:6px;max-width:70ch;">
+    This may change as odds update or market conditions shift.
+  </div>
+</div>
+
         )}
 
         {features.showUpgradePrompt && (
