@@ -193,3 +193,22 @@ h2 {
 .site-footer__cta a:hover {
   color: rgba(255, 255, 255, 0.9);
 }
+/* =========================
+   Polish: Hover + Focus
+   ========================= */
+
+.card {
+  transition: border-color 120ms ease, background 120ms ease, transform 120ms ease;
+}
+
+.card:hover {
+  border-color: rgba(138, 180, 248, 0.22);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+a:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid rgba(138, 180, 248, 0.55);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
